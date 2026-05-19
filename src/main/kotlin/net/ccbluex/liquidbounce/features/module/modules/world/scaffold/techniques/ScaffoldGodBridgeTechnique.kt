@@ -36,7 +36,7 @@ import net.ccbluex.liquidbounce.utils.block.targetfinding.CenterTargetPositionFa
 import net.ccbluex.liquidbounce.utils.block.targetfinding.FaceHandlingOptions
 import net.ccbluex.liquidbounce.utils.block.targetfinding.PlayerLocationOnPlacement
 import net.ccbluex.liquidbounce.utils.block.targetfinding.findBestBlockPlacementTarget
-import net.ccbluex.liquidbounce.utils.client.toRadians
+import net.ccbluex.liquidbounce.utils.math.toRadians
 import net.ccbluex.liquidbounce.utils.entity.PlayerSimulationCache
 import net.ccbluex.liquidbounce.utils.entity.getMovementDirectionOfInput
 import net.ccbluex.liquidbounce.utils.math.geometry.Line
@@ -146,7 +146,7 @@ object ScaffoldGodBridgeTechnique : ScaffoldTechnique("GodBridge"), ScaffoldLedg
             return getRotationForNoInput(target)
         }
 
-        val direction = getMovementDirectionOfInput(player.yRot, rawInput) + 180
+        val direction = player.getMovementDirectionOfInput(rawInput) + 180
 
         // Round to 45°-steps (NORTH, NORTH_EAST, etc.)
         val movingYaw = round(direction / 45) * 45

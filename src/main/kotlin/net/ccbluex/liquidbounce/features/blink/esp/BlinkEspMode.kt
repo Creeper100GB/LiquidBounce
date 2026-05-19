@@ -30,7 +30,6 @@ import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.render.renderEnvironmentForWorld
 import net.ccbluex.liquidbounce.render.withPositionRelativeToCamera
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
-import net.ccbluex.liquidbounce.utils.client.asPlainText
 import net.ccbluex.liquidbounce.utils.render.WireframePlayer
 import net.ccbluex.liquidbounce.utils.render.isCustom
 import net.ccbluex.liquidbounce.utils.render.scaleLightCoords
@@ -40,6 +39,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityAttachment
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.function.Supplier
@@ -57,7 +57,7 @@ class BlinkEspBox(
     getEspData: Supplier<BlinkEspData?>,
 ) : BlinkEspMode("Box", getEspData) {
     private val color by color("Color", Color4b(36, 32, 147, 87))
-    private val outlineColor by color("Color", Color4b(36, 32, 147, 255))
+    private val outlineColor by color("OutlineColor", Color4b(36, 32, 147, 255))
 
     @Suppress("unused")
     private val renderHandler = handler<WorldRenderEvent> { event ->
@@ -115,7 +115,7 @@ class BlinkEspModel(
             rs.setRotation(rotation)
         }
 
-        val cameraState = mc.gameRenderer.levelRenderState.cameraRenderState
+        val cameraState = mc.gameRenderer.gameRenderState.levelRenderState.cameraRenderState
         mc.entityRenderDispatcher.submit(
             rs,
             cameraState,
@@ -142,6 +142,8 @@ class BlinkEspWireframe(
         val (entity, pos, rotation) = this.getEspData.get() ?: return@handler
 
         wireframePlayer.pos = pos
+        wireframePlayer.pose = entity.pose
+        wireframePlayer.swimAmount = (entity as? LivingEntity)?.getSwimAmount(it.partialTicks) ?: 0f
         wireframePlayer.setRotation(rotation)
         wireframePlayer.render(it, color, outlineColor)
     }

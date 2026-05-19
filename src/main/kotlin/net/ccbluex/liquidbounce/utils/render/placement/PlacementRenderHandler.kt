@@ -26,7 +26,7 @@ import net.ccbluex.liquidbounce.render.FULL_BOX
 import net.ccbluex.liquidbounce.render.drawBox
 import net.ccbluex.liquidbounce.render.renderEnvironmentForWorld
 import net.ccbluex.liquidbounce.render.withPositionRelativeToCamera
-import net.ccbluex.liquidbounce.utils.block.searchBlocksInCuboid
+import net.ccbluex.liquidbounce.utils.math.expandToBoundingBox
 import net.ccbluex.liquidbounce.utils.math.iterator
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
@@ -67,7 +67,6 @@ class PlacementRenderHandler(private val placementRenderer: PlacementRenderer, v
             val outlineColor = getOutlineColor(id)
 
             renderEnvironmentForWorld(matrixStack) {
-                startBatch()
                 fun drawEntryBox(blockPos: BlockPos, cullData: Long, box: AABB, colorFactor: Float) {
                     withPositionRelativeToCamera(blockPos) {
                         drawBox(
@@ -131,7 +130,6 @@ class PlacementRenderHandler(private val placementRenderer: PlacementRenderer, v
                     }
                 }
 
-                commitBatch()
             }
         }
     }
@@ -158,7 +156,7 @@ class PlacementRenderHandler(private val placementRenderer: PlacementRenderer, v
         }
 
         // TODO in theory a one block radius should be enough
-        for (mutable in pos.searchBlocksInCuboid(2)) {
+        for (mutable in pos.expandToBoundingBox(2, 2, 2)) {
             val longValue = mutable.asLong()
 
             val inValue = inList[longValue]

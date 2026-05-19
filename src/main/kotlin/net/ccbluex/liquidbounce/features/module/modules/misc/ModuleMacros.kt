@@ -33,10 +33,10 @@ import net.ccbluex.liquidbounce.utils.block.SwingMode
 import net.ccbluex.liquidbounce.utils.block.doPlacement
 import net.ccbluex.liquidbounce.utils.client.SilentHotbar
 import net.ccbluex.liquidbounce.utils.client.clientStartDurationMs
-import net.ccbluex.liquidbounce.utils.client.sendChatOrCommand
+import net.ccbluex.liquidbounce.utils.network.sendChatOrCommand
 import net.ccbluex.liquidbounce.utils.inventory.SingleItemStackPickMode
 import net.ccbluex.liquidbounce.utils.inventory.Slots
-import net.ccbluex.liquidbounce.utils.inventory.useItem
+import net.ccbluex.liquidbounce.utils.entity.useItem
 import net.minecraft.world.phys.BlockHitResult
 
 /**
@@ -130,7 +130,7 @@ object ModuleMacros : ClientModule("Macros", ModuleCategories.MISC) {
             }
 
             override suspend fun execute() {
-                val slot = Slots.OffhandWithHotbar.findSlot { pickMode.activeMode.test(it) } ?: return
+                val slot = Slots.OffhandWithHotbar.findSlot(pickMode.activeMode) ?: return
 
                 SilentHotbar.selectSlotSilently(ModuleMacros, slot, ticksUntilReset = holdTime.random())
                 when (action) {
