@@ -23,6 +23,7 @@ const URLClassLoader_1 = require("@ccbluex/liquidbounce-script-api/java/net/URLC
 const File_1 = require("@ccbluex/liquidbounce-script-api/java/io/File");
 const Thread_1 = require("@ccbluex/liquidbounce-script-api/java/lang/Thread");
 const Paths_1 = require("@ccbluex/liquidbounce-script-api/java/nio/file/Paths");
+const URL_1 = require("@ccbluex/liquidbounce-script-api/java/net/URL");
 // @ts-expect-error
 const HashMap_1 = require("@ccbluex/liquidbounce-script-api/java/util/HashMap");
 // @ts-expect-error
@@ -41,10 +42,8 @@ const globalEntries = Object.entries(globalThis);
 // Function to create a URLClassLoader from a JAR path
 function createClassLoaderFromJar(jarPath) {
     try {
-        // Create File object for the JAR
-        const jarFile = new File_1.File(jarPath);
-        // Convert File to URL
-        const jarUrl = jarFile.toURI().toURL();
+        // Create URL directly to avoid caller-sensitive URI.toURL() method
+        const jarUrl = new URL_1.URL("file:" + jarPath);
         // Create URLClassLoader with the system class loader as parent
         return new URLClassLoader_1.URLClassLoader([jarUrl], Thread_1.Thread.currentThread().getContextClassLoader());
     }
