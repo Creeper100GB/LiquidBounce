@@ -273,8 +273,13 @@ const packageName = "@ccbluex/liquidbounce-script-api";
 const path = ScriptManager_1.ScriptManager.INSTANCE.root.path;
 // @ts-expect-error
 if (Java.type("java.lang.System").getenv("SCRIPT_TYPEGEN_BUILD")) {
-    generate(path, packageName);
-    mc.close();
+    try {
+        generate(path, packageName);
+    } catch (e) {
+        console.error("Generation failed:", e);
+    } finally {
+        mc.close();
+    }
 }
 script.registerCommand({
     name: "ts-defgen",
